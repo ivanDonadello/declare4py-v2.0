@@ -28,7 +28,8 @@ jobs:
     - name: Build a binary wheel
       run: >-
         python setup.py sdist bdist_wheel
-    - name: Publish distribution 📦 to PyPI
+    - name: Publish distribution 📦 to PyPI Test PyPI
       uses: pypa/gh-action-pypi-publish@v1.0.1/refactor-architecture
       with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
+        password: ${{ secrets.PYPITESTAPI }}
+        repository-url: https://test.pypi.org/legacy/
