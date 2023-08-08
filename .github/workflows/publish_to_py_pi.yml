@@ -29,7 +29,7 @@ jobs:
       run: >-
         python setup.py sdist bdist_wheel
     - name: Publish distribution 📦 to PyPI Test PyPI
-      uses: pypa/gh-action-pypi-publish@v1.0.1/refactor-architecture
+      uses: pypa/gh-action-pypi-publish@unstable/v1
       with:
         password: ${{ secrets.PYPITESTAPI }}
         repository-url: https://test.pypi.org/legacy/
