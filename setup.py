@@ -13,7 +13,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 setup(
     name="my_package_name",
     version='{{VERSION_PLACEHOLDER}}',
-    author="John Doe",
+    author="Ivan",
     author_email="johndoe@mail.com",
     description="my amazing package",
     url = "https://github.com/johndoe/my_package",
@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     install_requires=['numpy'],
-    keywords=['pypi', 'cicd', 'python'],
+    keywords=['python', 'bpm', 'declare', 'process-mining', 'rule-mining', 'business-process-management', 'declarative-process-models'],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
