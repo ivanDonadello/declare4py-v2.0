@@ -1,7 +1,7 @@
 from tqdm import tqdm
-from Declare4Py.bpmnconstraints.parser.bpmn_parser import Parser
-from Declare4Py.bpmnconstraints.utils.script_utils import Setup
-from Declare4Py.bpmnconstraints.utils.plot import Plot
+from Declare4Py.Utils.bpmnconstraints.parser.bpmn_parser import Parser
+from Declare4Py.Utils.bpmnconstraints.utils.script_utils import Setup
+from Declare4Py.Utils.bpmnconstraints.utils.plot import Plot
 
 FAIL = "failed"
 SUCCESS = "successful"

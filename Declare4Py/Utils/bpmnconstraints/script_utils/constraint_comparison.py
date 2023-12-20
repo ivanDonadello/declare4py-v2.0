@@ -1,11 +1,11 @@
 import json
 import re
 from tqdm import tqdm
-from Declare4Py.bpmnconstraints.utils.script_utils import Setup
-from Declare4Py.bpmnconstraints.parser.bpmn_parser import Parser
-from Declare4Py.bpmnconstraints.compiler.bpmn_compiler import Compiler
-from Declare4Py.bpmnconstraints.utils.plot import Plot
-from Declare4Py.bpmnconstraints.utils.constants import (
+from Declare4Py.Utils.bpmnconstraints.utils.script_utils import Setup
+from Declare4Py.Utils.bpmnconstraints.parser.bpmn_parser import Parser
+from Declare4Py.Utils.bpmnconstraints.compiler.bpmn_compiler import Compiler
+from Declare4Py.Utils.bpmnconstraints.utils.plot import Plot
+from Declare4Py.Utils.bpmnconstraints.utils.constants import (
     DISCARDED_CONSTRAINTS,
     DECLARE_GATEWAYS,
     DECLARE_CONSTRAINT_REGEX_PATTERN,

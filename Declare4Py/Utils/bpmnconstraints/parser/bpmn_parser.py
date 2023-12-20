@@ -2,10 +2,10 @@ import logging
 from pathlib import Path
 from json import load, JSONDecodeError
 from xml.etree import ElementTree
-from Declare4Py.bpmnconstraints.utils.constants import *
-from Declare4Py.bpmnconstraints.utils.sanitizer import Sanitizer
-from Declare4Py.bpmnconstraints.parser.json_model import JsonModel
-from Declare4Py.bpmnconstraints.parser.xml_model import XmlModel
+from Declare4Py.Utils.bpmnconstraints.utils.constants import *
+from Declare4Py.Utils.bpmnconstraints.utils.sanitizer import Sanitizer
+from Declare4Py.Utils.bpmnconstraints.parser.json_model import JsonModel
+from Declare4Py.Utils.bpmnconstraints.parser.xml_model import XmlModel
 
 
 class Parser:

@@ -1,8 +1,8 @@
 from itertools import combinations
-from Declare4Py.bpmnconstraints.templates.declare_templates import Declare
-from Declare4Py.bpmnconstraints.templates.matching_templates import Signal
-from Declare4Py.bpmnconstraints.compiler.ltl.declare2ltl import Declare2ltl
-from Declare4Py.bpmnconstraints.utils.constants import *
+from Declare4Py.Utils.bpmnconstraints.templates.declare_templates import Declare
+from Declare4Py.Utils.bpmnconstraints.templates.matching_templates import Signal
+from Declare4Py.Utils.bpmnconstraints.compiler.ltl.declare2ltl import Declare2ltl
+from Declare4Py.Utils.bpmnconstraints.utils.constants import *
 
 
 class Compiler:

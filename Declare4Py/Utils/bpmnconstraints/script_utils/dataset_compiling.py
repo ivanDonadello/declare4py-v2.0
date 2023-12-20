@@ -1,9 +1,9 @@
 from json import dumps
 from tqdm import tqdm
 from numpy import median, average
-from Declare4Py.bpmnconstraints.parser.bpmn_parser import Parser
-from Declare4Py.bpmnconstraints.compiler.bpmn_compiler import Compiler
-from Declare4Py.bpmnconstraints.utils.script_utils import Setup
+from Declare4Py.Utils.bpmnconstraints.parser.bpmn_parser import Parser
+from Declare4Py.Utils.bpmnconstraints.compiler.bpmn_compiler import Compiler
+from Declare4Py.Utils.bpmnconstraints.utils.script_utils import Setup
 
 
 class CompilingScript:

@@ -1,4 +1,4 @@
-from Declare4Py.bpmnconstraints.utils.constants import *
+from Declare4Py.Utils.bpmnconstraints.utils.constants import *
 
 class JsonModel:
     def __init__(self, model) -> None:
