@@ -26,11 +26,8 @@ class Sanitizer:
 
         label = NON_ALPHANUM.sub(" ", label)
         label = label.strip()
-        label = " ".join([part for part in label.split() if len(part) > 1])
 
         label = self.__camel_to_white(label)
-
-        label = label.lower()
 
         label = re.sub(r"\s{1,}", " ", label)
         return label

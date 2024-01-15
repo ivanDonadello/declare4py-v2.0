@@ -1293,21 +1293,29 @@ class DeclareModel(LTLModel):
         return self
     
     def parse_from_diagram(self, diagram_lines: [str]) -> DeclareModel:
-        activities = set()
+        all_activities = set()
         constraints = {}
 
         # Extract activities and prepare constraints structure
-        for line in diagram_lines:
+        """for line in diagram_lines:
             parts = line.strip('[]').split('[')
             _, actions = parts
             for action in actions.split(', '):
                 activities.add(action)
-                constraints[action] = set()
+                constraints[action] = set()"""
 
         # Identify constraints and apply templates
         for line in diagram_lines:
             template_split = line.split("[", 1)
             template_search = re.search(r'(^.+?)(\d*$)', template_split[0])
+            parts = line.strip('[]').split('[')
+            _, actions = parts
+            activities = []
+            for action in actions.split(', '):
+                activities.append(action)
+                all_activities.add(action)
+                constraints[action] = set()
+
             if template_search is not None:
                 parts = line.strip('[]').split('[')
 
@@ -1316,13 +1324,13 @@ class DeclareModel(LTLModel):
                 if template is not None:
                     # Add template constraints to the activities
                     tmp = {"template": template, "activities": activities,
-                               "condition": re.split(r'\s+\|', line)[1:]}
+                               "condition": ["",""]}#re.split(r'\s+\|', line)[1:]}
                     if template.supports_cardinality:
                         tmp['n'] = 1 if not cardinality else int(cardinality)
                         cardinality = tmp['n']
                     self.constraints.append(tmp)
                     self.parsed_model.add_template(line, template, str(cardinality))
-        self.activities = list(activities)
+        self.activities = list(all_activities)
         self.set_constraints()
 
         return self

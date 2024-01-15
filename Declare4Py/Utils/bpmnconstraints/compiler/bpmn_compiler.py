@@ -2,6 +2,7 @@ from itertools import combinations
 from Declare4Py.Utils.bpmnconstraints.templates.declare_templates import Declare
 from Declare4Py.Utils.bpmnconstraints.templates.matching_templates import Signal
 from Declare4Py.Utils.bpmnconstraints.compiler.ltl.declare2ltl import Declare2ltl
+from Declare4Py.Utils.bpmnconstraints.templates.LTLf_templates import LTLf
 from Declare4Py.Utils.bpmnconstraints.utils.constants import *
 
 
@@ -11,7 +12,7 @@ class Compiler:
         self.transitivity = transitivity
         self.declare = Declare()
         self.signal = Signal()
-        self.ltlf = Declare2ltl()
+        self.ltlf = LTLf()
         self.concurrent = True
         self.compiled_sequence = []
         self.cfo = None
@@ -43,7 +44,7 @@ class Compiler:
                     self.__create_response_constraint()
 
     def _create_gateway_constraints(self):
-        if self.__get_cfo_type() == XOR_GATEWAY:
+        if self.__get_cfo_type() in XOR_GATEWAY:
             self.__create_exclusive_choice_constraint()
 
         if self.__get_cfo_type() == AND_GATEWAY:
@@ -90,9 +91,7 @@ class Compiler:
                         description=f"{name} leads to {successor_name}",
                         signal=self.signal.succession(name, successor_name),
                         declare=self.declare.succession(name, successor_name),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.succession(name, successor_name)
-                        ),
+                        ltlf=self.ltlf.succession(name, successor_name)
                     )
                 )
 
@@ -101,9 +100,7 @@ class Compiler:
                         description=f"{name} and {successor_name}",
                         signal=self.signal.co_existence(name, successor_name),
                         declare=self.declare.co_existence(name, successor_name),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.co_existence(name, successor_name)
-                        ),
+                        ltlf=self.ltlf.co_existence(name, successor_name)
                     )
                 )
 
@@ -113,9 +110,7 @@ class Compiler:
                             description=f"{name} or {successor_name}",
                             signal=self.signal.choice(name, successor_name),
                             declare=self.declare.choice(name, successor_name),
-                            ltlf=self.ltlf.to_ltl_str(
-                                self.declare.choice(name, successor_name)
-                            ),
+                            ltlf=self.ltlf.choice(name, successor_name)
                         )
                     )
 
@@ -124,9 +119,7 @@ class Compiler:
                         description=f"{name} leads to (with loops) {successor_name}",
                         signal=self.signal.alternate_succession(name, successor_name),
                         declare=self.declare.alternate_succession(name, successor_name),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.alternate_succession(name, successor_name)
-                        ),
+                        ltlf=self.ltlf.alternate_succession(name, successor_name)
                     )
                 )
 
@@ -162,9 +155,7 @@ class Compiler:
                         declare=self.declare.precedence(
                             predecessor_name, successor_name
                         ),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.precedence(predecessor_name, successor_name)
-                        ),
+                        ltlf=self.ltlf.precedence(predecessor_name, successor_name)
                     )
                 )
 
@@ -178,11 +169,9 @@ class Compiler:
                             declare=self.declare.alternate_precedence(
                                 predecessor_name, successor_name
                             ),
-                            ltlf=self.ltlf.to_ltl_str(
-                                self.declare.alternate_precedence(
-                                    predecessor_name, successor_name
-                                )
-                            ),
+                            ltlf=self.ltlf.alternate_precedence(
+                                predecessor_name, successor_name
+                            )
                         )
                     )
 
@@ -272,9 +261,7 @@ class Compiler:
                         description=f"{predecessor_name} responds to {successor_name}",
                         signal=self.signal.response(predecessor_name, successor_name),
                         declare=self.declare.response(predecessor_name, successor_name),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.response(predecessor_name, successor_name)
-                        ),
+                        ltlf=self.ltlf.response(predecessor_name, successor_name),
                     )
                 )
 
@@ -287,10 +274,8 @@ class Compiler:
                         declare=self.declare.alternate_response(
                             predecessor_name, successor_name
                         ),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.alternate_response(
-                                predecessor_name, successor_name
-                            )
+                        ltlf=self.ltlf.alternate_response(
+                            predecessor_name, successor_name
                         ),
                     )
                 )
@@ -305,7 +290,7 @@ class Compiler:
                 description=f"starts with {name}",
                 signal=self.signal.init(name),
                 declare=self.declare.init(name),
-                ltlf=self.ltlf.to_ltl_str(self.declare.init(name)),
+                ltlf=self.ltlf.init(name),
             )
         )
 
@@ -320,7 +305,7 @@ class Compiler:
                 description=f"ends with {name}",
                 signal=self.signal.end(name),
                 declare=self.declare.end(name),
-                ltlf=self.ltlf.to_ltl_str(self.declare.end(name)),
+                ltlf=self.ltlf.end(name),
             )
         )
 
@@ -343,9 +328,7 @@ class Compiler:
                         description=f"{split[0]} xor {split[1]}",
                         signal=self.signal.exclusive_choice(split[0], split[1]),
                         declare=self.declare.exclusive_choice(split[0], split[1]),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.exclusive_choice(split[0], split[1])
-                        ),
+                        ltlf=self.ltlf.exclusive_choice(split[0], split[1]),
                     )
                 )
                 self.compiled_sequence.append(
@@ -353,9 +336,7 @@ class Compiler:
                         description=f"{split[0]} or {split[1]}",
                         signal=self.signal.choice(split[0], split[1]),
                         declare=self.declare.choice(split[0], split[1]),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.choice(split[0], split[1])
-                        ),
+                        ltlf=self.ltlf.choice(split[0], split[1]),
                     )
                 )
 
@@ -377,8 +358,8 @@ class Compiler:
                                     declare=self.declare.choice(
                                         predecessor_name, successor
                                     ),
-                                    ltlf=self.ltlf.to_ltl_str(
-                                        self.declare.choice(predecessor_name, successor)
+                                    ltlf=self.ltlf.choice(
+                                        predecessor_name, successor
                                     ),
                                 )
                             )
@@ -402,9 +383,7 @@ class Compiler:
                         description=f"{split[0]} and {split[1]}",
                         signal=self.signal.co_existence(split[0], split[1]),
                         declare=self.declare.co_existence(split[0], split[1]),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.co_existence(split[0], split[1])
-                        ),
+                        ltlf=self.ltlf.co_existence(split[0], split[1]),
                     )
                 )
 
@@ -427,9 +406,7 @@ class Compiler:
                         description=f"{split[0]} or {split[1]}",
                         signal=self.signal.choice(split[0], split[1]),
                         declare=self.declare.choice(split[0], split[1]),
-                        ltlf=self.ltlf.to_ltl_str(
-                            self.declare.choice(split[0], split[1])
-                        ),
+                        ltlf=self.ltlf.choice(split[0], split[1]),
                     )
                 )
 
@@ -449,8 +426,8 @@ class Compiler:
                                 declare=self.declare.choice(
                                     predecessor_name, successor
                                 ),
-                                ltlf=self.ltlf.to_ltl_str(
-                                    self.declare.choice(predecessor_name, successor)
+                                ltlf=self.ltlf.choice(
+                                    predecessor_name, successor
                                 ),
                             )
                         )

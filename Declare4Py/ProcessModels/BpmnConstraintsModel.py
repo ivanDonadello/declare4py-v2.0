@@ -3,28 +3,25 @@ import logging
 import sys
 import json
 from pathlib import Path
-from json import dumps
 from tqdm import tqdm
 from Declare4Py.Utils.bpmnconstraints.parser.bpmn_parser import Parser
 from Declare4Py.Utils.bpmnconstraints.compiler.bpmn_compiler import Compiler
 from Declare4Py.ProcessModels.DeclareModel import DeclareModel
-from Declare4Py.ProcessModels.LTLModel import LTLModel, LTLTemplate
-from Declare4Py.Utils.bpmnconstraints.utils.script_utils import Setup
-from Declare4Py.Utils.bpmnconstraints.script_utils.constraint_comparison import ComparisonScript
-from Declare4Py.Utils.bpmnconstraints.script_utils.dataset_parsing import ParserScript
-from Declare4Py.Utils.bpmnconstraints.script_utils.dataset_compiling import CompilingScript
+from Declare4Py.ProcessModels.LTLModel import LTLModel
 from Declare4Py.ProcessModels.AbstractModel import ProcessModel
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 class BpmnConstraintsModel(ProcessModel):
+    """
+    BpmnConstraintsModel is designed to extract constraints from a bpmn diagram expressed as a xml file.
+    For example usage, see Declare4Py/Utils/bpmnconstraints/tutorial/bpmn2constraints.ipynb
+    """
     def __init__(self):
         super().__init__()
-        # Initialize BPMN-specific attributes here
         self.declare_model = DeclareModel()
-        self.ltl_model = LTLModel()
+        self.ltl_model = []
+        self.formulas = []
         self.serialized_constraints: [str] = []
-
-
 
     def parse_from_file(self, model_path: str, **kwargs):
         xml_path = Path(model_path)
@@ -33,11 +30,10 @@ class BpmnConstraintsModel(ProcessModel):
         if not xml_path.is_file():
             logging.warning("Provided path is not a file: {}".format(model_path))
             return
-
         try:
             # Parsing and compiling the BPMN constraints
             parsed_result = Parser(xml_path, True, transitivity=False).run()
-            compiled_result = Compiler(parsed_result, transitivity=False, skip_named_gateways=False).run()
+            compiled_result = Compiler(parsed_result, transitivity=True, skip_named_gateways=False).run()
 
             # Extract DECLARE and LTLf constraints
             declare_constraints = [constraint.get("DECLARE") for constraint in compiled_result]
@@ -46,12 +42,16 @@ class BpmnConstraintsModel(ProcessModel):
             # Assign the constraints to the class attributes if they exist
             if declare_constraints and ltl_constraints:
                 self.declare_model = self.declare_model.parse_from_diagram(declare_constraints)
-                self.ltl_model = ltl_constraints
+                for con in ltl_constraints:
+                    if con is not None:
+                        ltl_model = LTLModel()
+                        ltl_model.parse_from_diagram(con, self.declare_model.activities)
+                        self.ltl_model.append(ltl_model)
+                    
                 
         except Exception as e:
             logging.error(f"{model_path}: {e}")
         
-
     def parse_from_string(self, content: str, **kwargs):
         declare_constraints = []
         ltl_constraints = []
@@ -70,9 +70,9 @@ class BpmnConstraintsModel(ProcessModel):
                 ltl_constraints.append(constraint.get("LTLf"))
                 
             # Assign the parsed constraints to the class attributes
-            if declare_constraints and ltl_constraints:
+            if declare_constraints:
                 self.declare_model = declare_constraints
-                self.ltl_model = ltl_constraints
+            self.ltl_model = ltl_constraints
         except Exception as e:
             logging.error(f"Error parsing from string: {e}")
 
