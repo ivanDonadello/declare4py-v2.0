@@ -5,7 +5,7 @@ from logaut import ltl2dfa
 from Declare4Py.ProcessModels.AbstractModel import ProcessModel
 from pylogics.parsers import parse_ltl
 from Declare4Py.Utils.utils import Utils
-from typing import List
+from typing import List, Tuple
 
 
 class LTLModel(ProcessModel, ABC):
@@ -153,7 +153,19 @@ class LTLModel(ProcessModel, ABC):
             return True
         else:
             return False
+        
+    def parse_from_diagram(self, line: str, activites):
+        for word in activites:
+            prefixed_word = 'con_' + word.replace(' ', '').lower()
+            line = line.replace(word.replace(' ', '_'), prefixed_word)
+            if line == word:
+                line = word.replace(' ', '').lower()
+                line = 'con_' + line
 
+        self.parse_from_string(line)
+        self.attribute_type = ["concept:name"]
+
+        
     def parse_from_string(self, content: str, new_line_ctrl: str = "\n") -> None:
         """
         This function expects an LTL formula as a string.
