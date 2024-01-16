@@ -5,7 +5,7 @@ from logaut import ltl2dfa
 from Declare4Py.ProcessModels.AbstractModel import ProcessModel
 from pylogics.parsers import parse_ltl
 from Declare4Py.Utils.utils import Utils
-from typing import List, Tuple
+from typing import List
 
 
 class LTLModel(ProcessModel, ABC):
@@ -155,7 +155,18 @@ class LTLModel(ProcessModel, ABC):
             return False
         
     def parse_from_diagram(self, line: str, activites):
+        """
+        Parses a xml file generated from a bpmn diagram. 
+        args:
+            line - A string containing the LTLf formula to parse
+            activities - A list of activities generated from the DeclareModel
+
+        Returns:
+            Void
+        """
         for word in activites:
+            """ TODO: While this works currently, som modifications should be made to either parse_from_string or 
+                the analyzer to make it applicable to all event logs """
             prefixed_word = 'con_' + word.replace(' ', '').lower()
             line = line.replace(word.replace(' ', '_'), prefixed_word)
             if line == word:

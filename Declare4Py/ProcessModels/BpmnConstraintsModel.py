@@ -24,6 +24,14 @@ class BpmnConstraintsModel(ProcessModel):
         self.serialized_constraints: [str] = []
 
     def parse_from_file(self, model_path: str, **kwargs):
+        """
+
+        Uses a path to a xml file to parse and create a DeclareModel and a LTLModel for Declare4Py
+
+        arguments: 
+            modelpath - The path to the xml file, as a string
+            kwargs - 
+        """
         xml_path = Path(model_path)
 
         # Check if the path is a file

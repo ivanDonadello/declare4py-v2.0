@@ -1293,16 +1293,16 @@ class DeclareModel(LTLModel):
         return self
     
     def parse_from_diagram(self, diagram_lines: [str]) -> DeclareModel:
+        """
+        Parses a xml file generated from a bpmn diagram. 
+        args:
+            diagram_lines: A list of declare constraints generated from a bpmn diagram
+
+        Returns:
+            DeclareModel
+        """
         all_activities = set()
         constraints = {}
-
-        # Extract activities and prepare constraints structure
-        """for line in diagram_lines:
-            parts = line.strip('[]').split('[')
-            _, actions = parts
-            for action in actions.split(', '):
-                activities.add(action)
-                constraints[action] = set()"""
 
         # Identify constraints and apply templates
         for line in diagram_lines:
@@ -1312,8 +1312,8 @@ class DeclareModel(LTLModel):
             _, actions = parts
             activities = []
             for action in actions.split(', '):
-                activities.append(action)
-                all_activities.add(action)
+                activities.append(action)  # Extract the activities for the current constraint
+                all_activities.add(action) # Extract the activity for the entire model
                 constraints[action] = set()
 
             if template_search is not None:
@@ -1322,7 +1322,7 @@ class DeclareModel(LTLModel):
                 template_str, cardinality = template_search.groups()
                 template = DeclareModelTemplate.get_template_from_string(template_str)
                 if template is not None:
-                    # Add template constraints to the activities
+                    # bpmn2constraints don't use conditions
                     tmp = {"template": template, "activities": activities,
                                "condition": ["",""]}#re.split(r'\s+\|', line)[1:]}
                     if template.supports_cardinality:
